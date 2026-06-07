@@ -29,8 +29,10 @@ export default function Register() {
 
     setLoading(false)
 
-    if (authError) return setError('Erro ao enviar o link. Tente novamente.')
-    setStep('sent')
+    if (authError) {
+      console.log('Supabase auth error:', authError.message, authError.status)
+      return setError(`Erro: ${authError.message}`)
+    }
   }
 
   if (step === 'sent') {
