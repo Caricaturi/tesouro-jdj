@@ -32,7 +32,6 @@ export default function Scan() {
     }
   }, [userId, scanning])
 
-  // Also handle ?code= from URL (when QR opens the page directly)
   useEffect(() => {
     const code = router.query.code
     if (code && userId) handleCode(code)
@@ -44,17 +43,21 @@ export default function Scan() {
     await handleCode(code)
   }
 
-  function onScanError() {} // silent — scanner retries automatically
+  function onScanError() {}
 
   async function handleCode(code) {
     setError('')
+    console.log('[scan] sending code:', code, 'userId:', userId)
+
     const res = await fetch('/api/scan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, userId })
     })
 
+    console.log('[scan] response status:', res.status)
     const data = await res.json()
+    console.log('[scan] response data:', data)
 
     if (!res.ok) return setError(data.error || 'Erro ao registrar QR code.')
 
